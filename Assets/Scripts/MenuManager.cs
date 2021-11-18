@@ -4,6 +4,10 @@ using UnityEngine;
 using System.IO;
 using TMPro;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager instance;
@@ -11,6 +15,7 @@ public class MenuManager : MonoBehaviour
     public string currentName = "Name";
     public int bestScore = 0;
     public TMP_InputField nameText;
+    public TextMeshProUGUI bestScoreText;
 
     private void Awake()
     {
@@ -23,6 +28,7 @@ public class MenuManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         LoadInfo();
+        bestScoreText.text = "Best Score: " + savedName + ": " + bestScore;
     }
 
     [System.Serializable]
@@ -60,5 +66,16 @@ public class MenuManager : MonoBehaviour
     {
         currentName = nameText.text;
         SceneManager.LoadScene(1);
+    }
+
+    public void Exit()
+    {
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit(); // original code to quit Unity player
+#endif
+
+        SaveInfo();
     }
 }
