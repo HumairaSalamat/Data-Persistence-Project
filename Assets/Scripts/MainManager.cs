@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
+
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
@@ -11,17 +13,17 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
     private int m_Points;
-    
     private bool m_GameOver = false;
 
-    
     // Start is called before the first frame update
     void Start()
     {
+        BestScoreText.text = "Best Score: " + MenuManager.instance.savedName + ": " + MenuManager.instance.bestScore;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -57,6 +59,12 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                if (m_Points > MenuManager.instance.bestScore)
+                {
+                    MenuManager.instance.bestScore = m_Points;
+                    MenuManager.instance.savedName = MenuManager.instance.currentName;
+                    MenuManager.instance.SaveInfo();
+                }
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
